@@ -1,0 +1,8 @@
+.content {
+	@apply w-full  flex items-center justify-between pr-8;
+}
+
+.content:hover .icon {
+	opacity: 1;
+	visibility: visible;
+}

@@ -7,5 +7,5 @@ export interface ITodo {
 
 	title: string
 
-	isCompleted?: boolean
+	isCompleted?: boolean | null
 }

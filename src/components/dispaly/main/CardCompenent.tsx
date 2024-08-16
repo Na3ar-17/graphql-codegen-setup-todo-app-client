@@ -5,7 +5,13 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { FormField } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { ITodo } from '@/entities/todo.entity'
+import { DeleteTodoMutation, Exact, Scalars } from '@/gql/graphql'
 import { IUpdateTodo } from '@/types/todo.types'
+import {
+	ApolloCache,
+	DefaultContext,
+	MutationFunctionOptions,
+} from '@apollo/client'
 import { Pencil, Trash2 } from 'lucide-react'
 import { NextPage } from 'next'
 import { useState } from 'react'
@@ -13,9 +19,19 @@ import { Form, useForm } from 'react-hook-form'
 
 interface IProps {
 	data: ITodo
+	deleteTodo?: (
+		options?:
+			| MutationFunctionOptions<
+					DeleteTodoMutation,
+					Exact<{ id: string }>,
+					DefaultContext,
+					ApolloCache<any>
+			  >
+			| undefined
+	) => Promise
 }
 
-const CardCompenent: NextPage<IProps> = ({ data }) => {
+const CardCompenent: NextPage<IProps> = ({ data, deleteTodo }) => {
 	const [isEdit, setIsEdit] = useState<boolean>(false)
 	const form = useForm<IUpdateTodo>({
 		mode: 'onChange',
@@ -51,13 +67,16 @@ const CardCompenent: NextPage<IProps> = ({ data }) => {
 								onClick={() => setIsEdit(!isEdit)}
 								className='size-5 text-primary cursor-pointer transition-all  opacity-0 invisible icon'
 							/>
-							<Trash2 className='size-5 text-destructive cursor-pointer transition-all  opacity-0 invisible icon' />
+							<Trash2
+								onClick={() => deleteTodo({ variables: { id: data.id } })}
+								className='size-5 text-destructive cursor-pointer transition-all  opacity-0 invisible icon'
+							/>
 						</div>
 						<FormField
 							control={form.control}
 							name='isCompleted'
 							render={({ field: { value, onChange } }) => (
-								<Checkbox checked={value} onCheckedChange={onChange} />
+								<Checkbox checked={value || false} onCheckedChange={onChange} />
 							)}
 						/>
 					</CardContent>

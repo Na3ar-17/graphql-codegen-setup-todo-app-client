@@ -1,4 +1,7 @@
 import { ThemeProvider } from '@/components/theme-provider'
+import { ApolloWrapper } from '@/lib/ApolloWrapper'
+import { client } from '@/lib/client'
+import { ApolloProvider } from '@apollo/client'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -17,15 +20,21 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='en'>
-			<body suppressHydrationWarning={true} className={inter.className}>
-				<ThemeProvider
-					attribute='class'
-					defaultTheme='dark'
-					enableSystem
-					disableTransitionOnChange
-				>
-					{children}
-				</ThemeProvider>
+			<body
+				suppressHydrationWarning={true}
+				suppressContentEditableWarning={true}
+				className={inter.className}
+			>
+				<ApolloWrapper>
+					<ThemeProvider
+						attribute='class'
+						defaultTheme='dark'
+						enableSystem
+						disableTransitionOnChange
+					>
+						{children}
+					</ThemeProvider>
+				</ApolloWrapper>
 			</body>
 		</html>
 	)
